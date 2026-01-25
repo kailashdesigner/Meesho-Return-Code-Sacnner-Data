@@ -77,8 +77,8 @@ async function handleManualEntry() {
         return;
     }
     
-    // Validate and process
-    await processTrackingCode(trackingCode, 'Manual');
+    // Validate and process (play beep for manual entry)
+    await processTrackingCode(trackingCode, 'Manual', true);
     
     // Clear input
     input.value = '';
@@ -127,12 +127,17 @@ async function openScanner() {
     try {
         state.scanner = new Html5Qrcode('scannerContainer');
         
-        // Start scanning
+        // Start scanning with smaller square scan area
         await state.scanner.start(
             { facingMode: 'environment' }, // Use back camera on mobile
             {
                 fps: 10,
-                qrbox: { width: 250, height: 250 },
+                qrbox: function(viewfinderWidth, viewfinderHeight) {
+                    // Make it a smaller square (30% of the smaller dimension)
+                    const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+                    const qrboxSize = Math.floor(minEdge * 0.3);
+                    return { width: qrboxSize, height: qrboxSize };
+                },
                 aspectRatio: 1.0
             },
             onScanSuccess,
@@ -151,17 +156,13 @@ async function openScanner() {
  * Handle successful barcode scan
  */
 async function onScanSuccess(decodedText, decodedResult) {
-    // Stop scanner temporarily
-    if (state.scanner && state.isScanning) {
-        await state.scanner.stop();
-        state.isScanning = false;
-    }
+    // Play beep immediately to indicate successful scan
+    playBeep();
     
-    // Process the scanned code
-    await processTrackingCode(decodedText, 'Camera');
+    // Process the scanned code (scanner continues running, no beep in processTrackingCode)
+    await processTrackingCode(decodedText, 'Camera', false);
     
-    // Close scanner after successful scan
-    closeScanner();
+    // Scanner stays open for continuous scanning
 }
 
 /**
@@ -200,8 +201,11 @@ async function closeScanner() {
 
 /**
  * Process tracking code (validate, check duplicate, add to list, send to sheet)
+ * @param {string} trackingCode - The tracking code to process
+ * @param {string} entryType - 'Manual' or 'Camera'
+ * @param {boolean} playBeepSound - Whether to play beep sound (default: false, camera handles its own beep)
  */
-async function processTrackingCode(trackingCode, entryType) {
+async function processTrackingCode(trackingCode, entryType, playBeepSound = false) {
     // Validate
     if (!trackingCode || trackingCode.length === 0) {
         showMessage('Invalid tracking code', 'error');
@@ -221,8 +225,10 @@ async function processTrackingCode(trackingCode, entryType) {
     // Add to list with success state
     addToList(trackingCode, entryType, false);
     
-    // Play beep sound
-    playBeep();
+    // Play beep sound (only if requested - camera handles its own beep)
+    if (playBeepSound) {
+        playBeep();
+    }
     
     // Show success message
     showMessage(`Added: ${trackingCode}`, 'success');
