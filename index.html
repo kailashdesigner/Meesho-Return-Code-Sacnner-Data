@@ -9,21 +9,20 @@
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
 <body>
-    asdf
     <!-- Top Fixed Bar -->
     <div class="top-bar">
         <div class="input-container">
-            <span class="barcode-icon">📷</span>
+            <span class="barcode-icon">📊</span>
             <input 
                 type="text" 
                 id="manualInput" 
                 placeholder="Enter tracking code"
                 autocomplete="off"
             >
+            <button id="cameraBtn" class="camera-btn" aria-label="Open camera scanner">
+                📷
+            </button>
         </div>
-        <button id="cameraBtn" class="camera-btn" aria-label="Open camera scanner">
-            📷
-        </button>
     </div>
 
     <!-- Scanner Overlay (Hidden by default) -->
@@ -36,8 +35,8 @@
         <div class="scanner-instruction">Point camera at barcode</div>
     </div>
 
-    <!-- Display List -->
-    <div class="content-area">
+    <!-- Display List (Hidden) -->
+    <div class="content-area" style="display: none;">
         <table class="tracking-table">
             <thead>
                 <tr>
@@ -59,5 +58,4 @@
     <script src="script.js"></script>
 </body>
 </html>
-
 
