@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Return Tracking Scanner</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- html5-qrcode library for barcode scanning -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+    <!-- Top Fixed Bar -->
+    <div class="top-bar">
+        <div class="input-container">
+            <span class="barcode-icon">📷</span>
+            <input 
+                type="text" 
+                id="manualInput" 
+                placeholder="Enter tracking code"
+                autocomplete="off"
+            >
+        </div>
+        <button id="cameraBtn" class="camera-btn" aria-label="Open camera scanner">
+            📷
+        </button>
+    </div>
+
+    <!-- Scanner Overlay (Hidden by default) -->
+    <div id="scannerOverlay" class="scanner-overlay">
+        <div class="scanner-header">
+            <button id="closeScanner" class="close-btn" aria-label="Close scanner">❌</button>
+        </div>
+        <div id="scannerContainer" class="scanner-container"></div>
+        <div class="scanner-instruction">Point camera at barcode</div>
+    </div>
+
+    <!-- Display List -->
+    <div class="content-area">
+        <table class="tracking-table">
+            <thead>
+                <tr>
+                    <th>Sr No</th>
+                    <th>Tracking</th>
+                    <th>Entry Type</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody id="trackingList">
+                <!-- Items will be added here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="message" class="message"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
