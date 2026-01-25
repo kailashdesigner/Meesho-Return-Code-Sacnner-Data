@@ -127,14 +127,23 @@ async function openScanner() {
     try {
         state.scanner = new Html5Qrcode('scannerContainer');
         
-        // Start scanning with smaller square scan area
+        // Start scanning with proper square scan area
         await state.scanner.start(
             { facingMode: 'environment' }, // Use back camera on mobile
             {
                 fps: 10,
-  qrbox: { width: 250, height: 250 }, // FORCE square
-  aspectRatio: 1.0,
-  disableFlip: false
+                qrbox: function(viewfinderWidth, viewfinderHeight) {
+                    // Make it a proper square - use 35% of the smaller dimension
+                    // This ensures it's always a perfect square and looks good
+                    const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+                    const qrboxSize = Math.floor(minEdge * 0.35);
+                    // Return same width and height to ensure perfect square
+                    return { 
+                        width: qrboxSize, 
+                        height: qrboxSize 
+                    };
+                },
+                aspectRatio: 1.0
             },
             onScanSuccess,
             onScanError
@@ -154,6 +163,12 @@ async function openScanner() {
 async function onScanSuccess(decodedText, decodedResult) {
     // Play beep immediately to indicate successful scan
     playBeep();
+    
+    // Vibrate to provide haptic feedback
+    vibrate();
+    
+    // Show scanned code in the scanner overlay
+    showScannedCode(decodedText);
     
     // Process the scanned code (scanner continues running, no beep in processTrackingCode)
     await processTrackingCode(decodedText, 'Camera', false);
@@ -345,6 +360,43 @@ function playBeep() {
 }
 
 /**
+ * Vibrate device for haptic feedback
+ */
+function vibrate() {
+    try {
+        // Check if vibration API is supported
+        if ('vibrate' in navigator) {
+            // Vibrate pattern: short vibration
+            navigator.vibrate(100);
+        }
+    } catch (error) {
+        // Vibration not supported or failed
+        console.log('Vibration not available');
+    }
+}
+
+/**
+ * Show scanned code in the scanner overlay
+ */
+function showScannedCode(trackingCode) {
+    const displayEl = document.getElementById('scannedCodeDisplay');
+    if (!displayEl) return;
+    
+    // Show the scanned code
+    displayEl.textContent = `✓ Scanned: ${trackingCode}`;
+    displayEl.classList.add('show');
+    
+    // Hide after 3 seconds
+    setTimeout(() => {
+        displayEl.classList.remove('show');
+        // Clear text after animation
+        setTimeout(() => {
+            displayEl.textContent = '';
+        }, 300);
+    }, 3000);
+}
+
+/**
  * Escape HTML to prevent XSS
  */
 function escapeHtml(text) {
@@ -352,5 +404,4 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
-
 
