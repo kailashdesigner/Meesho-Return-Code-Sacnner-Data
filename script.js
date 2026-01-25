@@ -132,13 +132,9 @@ async function openScanner() {
             { facingMode: 'environment' }, // Use back camera on mobile
             {
                 fps: 10,
-                qrbox: function(viewfinderWidth, viewfinderHeight) {
-                    // Make it a smaller square (30% of the smaller dimension)
-                    const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
-                    const qrboxSize = Math.floor(minEdge * 0.3);
-                    return { width: qrboxSize, height: qrboxSize };
-                },
-                aspectRatio: 1.0
+  qrbox: { width: 250, height: 250 }, // FORCE square
+  aspectRatio: 1.0,
+  disableFlip: false
             },
             onScanSuccess,
             onScanError
@@ -356,4 +352,5 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
+
 
