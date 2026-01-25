@@ -130,6 +130,21 @@ body {
     justify-content: center;
     padding: 20px;
     min-height: 0;
+    position: relative;
+}
+
+/* Ensure html5-qrcode scanner renders as proper square */
+.scanner-container #scannerContainer,
+.scanner-container #html5-qrcode-container,
+.scanner-container video {
+    border-radius: 8px;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* Style the scanner viewfinder to be a proper square */
+.scanner-container #html5-qrcode-container canvas {
+    border-radius: 8px;
 }
 
 .scanner-instruction {
@@ -137,6 +152,31 @@ body {
     text-align: center;
     padding: 15px;
     font-size: 16px;
+}
+
+/* Scanned Code Display */
+.scanned-code-display {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    z-index: 2100;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    max-width: 90%;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+}
+
+.scanned-code-display.show {
+    opacity: 1;
 }
 
 /* Content Area */
