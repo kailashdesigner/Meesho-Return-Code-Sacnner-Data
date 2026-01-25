@@ -120,29 +120,43 @@ async function openScanner() {
     
     if (!overlay || !container) return;
     
+    // Clear any existing scanner first
+    if (state.scanner && state.isScanning) {
+        try {
+            await state.scanner.stop();
+            await state.scanner.clear();
+        } catch (e) {
+            console.log('Clearing previous scanner:', e);
+        }
+        state.isScanning = false;
+        state.scanner = null;
+    }
+    
+    // Clear the container
+    container.innerHTML = '';
+    
     // Show overlay
     overlay.classList.add('active');
+    
+    // Small delay to ensure overlay is visible
+    await new Promise(resolve => setTimeout(resolve, 200));
     
     // Initialize scanner
     try {
         state.scanner = new Html5Qrcode('scannerContainer');
+        
+        // Calculate square size based on viewport (35% of smaller dimension)
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const minDimension = Math.min(viewportWidth, viewportHeight);
+        const qrboxSize = Math.max(200, Math.floor(minDimension * 0.35)); // Minimum 200px
         
         // Start scanning with proper square scan area
         await state.scanner.start(
             { facingMode: 'environment' }, // Use back camera on mobile
             {
                 fps: 10,
-                qrbox: function(viewfinderWidth, viewfinderHeight) {
-                    // Make it a proper square - use 35% of the smaller dimension
-                    // This ensures it's always a perfect square and looks good
-                    const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
-                    const qrboxSize = Math.floor(minEdge * 0.35);
-                    // Return same width and height to ensure perfect square
-                    return { 
-                        width: qrboxSize, 
-                        height: qrboxSize 
-                    };
-                },
+                qrbox: { width: qrboxSize, height: qrboxSize }, // Fixed square size
                 aspectRatio: 1.0
             },
             onScanSuccess,
@@ -181,9 +195,13 @@ async function onScanSuccess(decodedText, decodedResult) {
  */
 function onScanError(errorMessage) {
     // Ignore continuous error messages during scanning
-    // Only log if it's a critical error
-    if (errorMessage && !errorMessage.includes('NotFoundException')) {
-        // Silent error handling for continuous scanning
+    // NotFoundException is normal when no code is detected
+    // Only log actual errors
+    if (errorMessage && 
+        !errorMessage.includes('NotFoundException') && 
+        !errorMessage.includes('No QR code found')) {
+        // Log only real errors, not "not found" messages
+        console.log('Scan error:', errorMessage);
     }
 }
 
