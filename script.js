@@ -243,7 +243,12 @@ async function processTrackingCode(trackingCode, entryType, playBeepSound = fals
     
     // Check for duplicate
     if (state.scannedCodes.has(trackingCode)) {
-        showMessage(`Duplicate: ${trackingCode}`, 'error');
+        const time = new Date().toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        showMessage(`Meeshow - Duplicate: ${trackingCode} | ${entryType} | ${time}`, 'error');
         addToList(trackingCode, entryType, true); // true = isDuplicate
         return false;
     }
@@ -259,8 +264,13 @@ async function processTrackingCode(trackingCode, entryType, playBeepSound = fals
         playBeep();
     }
     
-    // Show success message
-    showMessage(`Added: ${trackingCode}`, 'success');
+    // Show success message with Meeshow branding
+    const time = new Date().toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    showMessage(`Meeshow - Scanned: ${trackingCode} | ${entryType} | ${time}`, 'success');
     
     // Send to Google Sheet (only if not duplicate)
     try {
