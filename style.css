@@ -106,7 +106,51 @@ body {
 .scanner-header {
     padding: 15px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.scanner-status {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    flex: 1;
+    text-align: left;
+}
+
+.scanner-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.torch-btn {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    touch-action: manipulation;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+.torch-btn:active {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.torch-btn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.torch-btn.active {
+    background-color: rgba(255, 255, 0, 0.9);
 }
 
 .close-btn {
@@ -136,6 +180,39 @@ body {
     padding: 20px;
     min-height: 0;
     position: relative;
+    transition: border 0.3s ease;
+}
+
+/* Visual scan confirmation - green border on success */
+.scanner-container.scan-success {
+    border: 4px solid #4CAF50;
+    border-radius: 8px;
+    animation: flashGreen 0.5s ease;
+}
+
+/* Visual scan confirmation - red border on duplicate */
+.scanner-container.scan-duplicate {
+    border: 4px solid #f44336;
+    border-radius: 8px;
+    animation: flashRed 0.5s ease;
+}
+
+@keyframes flashGreen {
+    0%, 100% {
+        border-color: transparent;
+    }
+    50% {
+        border-color: #4CAF50;
+    }
+}
+
+@keyframes flashRed {
+    0%, 100% {
+        border-color: transparent;
+    }
+    50% {
+        border-color: #f44336;
+    }
 }
 
 /* Ensure html5-qrcode scanner renders as proper square */
