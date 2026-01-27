@@ -28,7 +28,13 @@
     <!-- Scanner Overlay (Hidden by default) -->
     <div id="scannerOverlay" class="scanner-overlay">
         <div class="scanner-header">
-            <button id="closeScanner" class="close-btn" aria-label="Close scanner">❌</button>
+            <div class="scanner-status" id="scannerStatus">Scanning...</div>
+            <div class="scanner-controls">
+                <button id="torchBtn" class="torch-btn" aria-label="Toggle flashlight" title="Flashlight">
+                    🔦
+                </button>
+                <button id="closeScanner" class="close-btn" aria-label="Close scanner">❌</button>
+            </div>
         </div>
         <div id="scannerContainer" class="scanner-container"></div>
         <div id="scannedCodeDisplay" class="scanned-code-display"></div>
