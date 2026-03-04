@@ -183,18 +183,20 @@ body {
     transition: border 0.3s ease;
 }
 
-/* Visual scan confirmation - green border on success */
+/* Visual scan confirmation - green border and glow on success */
 .scanner-container.scan-success {
-    border: 4px solid #4CAF50;
-    border-radius: 8px;
-    animation: flashGreen 0.5s ease;
+    border: 6px solid #4CAF50;
+    border-radius: 16px;
+    box-shadow: 0 0 25px rgba(76, 175, 80, 0.8);
+    animation: flashGreen 0.4s ease;
 }
 
-/* Visual scan confirmation - red border on duplicate */
+/* Visual scan confirmation - red border and glow on duplicate/error */
 .scanner-container.scan-duplicate {
-    border: 4px solid #f44336;
-    border-radius: 8px;
-    animation: flashRed 0.5s ease;
+    border: 6px solid #f44336;
+    border-radius: 16px;
+    box-shadow: 0 0 25px rgba(244, 67, 54, 0.8);
+    animation: flashRed 0.4s ease;
 }
 
 @keyframes flashGreen {
