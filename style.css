@@ -103,10 +103,14 @@ body {
     display: flex;
 }
 .scanner-top-panel {
-    padding: 15px;
+    padding: 16px 16px 10px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
+    background-color: #ffffff;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 .scanner-nav {
@@ -117,7 +121,7 @@ body {
 }
 
 .scanner-title {
-    color: white;
+    color: #111827;
     font-size: 16px;
     font-weight: 600;
     flex: 1;
@@ -126,9 +130,9 @@ body {
 
 .nav-back-btn,
 .nav-torch-btn {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: #f3f4f6;
     border: none;
-    border-radius: 50%;
+    border-radius: 999px;
     width: 36px;
     height: 36px;
     font-size: 18px;
@@ -137,12 +141,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #111827;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
     transition: background-color 0.2s, opacity 0.2s;
 }
 
 .nav-back-btn:active,
 .nav-torch-btn:active {
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: #e5e7eb;
 }
 
 .nav-torch-btn.disabled {
@@ -155,13 +161,15 @@ body {
 }
 
 .scan-summary {
-    background-color: rgba(255, 255, 255, 0.95);
-    border-radius: 8px;
-    padding: 10px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    background-color: #ffffff;
+    border-radius: 999px;
+    padding: 8px 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.25);
+    border: 1px solid #e5e7eb;
 }
 
 .scan-summary-label {
@@ -189,14 +197,18 @@ body {
 }
 
 .scanner-banner {
-    margin: 0 16px;
-    padding: 10px 14px;
-    background-color: rgba(33, 33, 33, 0.85);
-    border-radius: 8px;
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 18px;
+    background-color: rgba(33, 33, 33, 0.92);
+    border-radius: 999px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    z-index: 5;
 }
 
 .scanner-banner-text {
@@ -226,8 +238,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 16px 0 24px;
     position: relative;
+    width: 100%;
 }
 
 /* Visual scan confirmation - green glow on success */
