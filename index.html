@@ -24,24 +24,47 @@
             </button>
         </div>
     </div>
+    testg
 
     <!-- Scanner Overlay (Hidden by default) -->
     <div id="scannerOverlay" class="scanner-overlay">
-        <div class="scanner-header">
-            <div class="scanner-status" id="scannerStatus">Scanning...</div>
-            <div class="scanner-controls">
-                <button id="torchBtn" class="torch-btn" aria-label="Toggle flashlight" title="Flashlight">
-                    🔦
-                </button>
-                <button id="closeScanner" class="close-btn" aria-label="Close scanner">❌</button>
+        <div class="scanner-top-panel">
+            <div class="scanner-nav">
+                <button id="closeScanner" class="nav-back-btn" aria-label="Close scanner">←</button>
+                <div class="scanner-title">Scan Your Shipments</div>
+                <button id="torchBtn" class="nav-torch-btn" aria-label="Toggle flashlight" title="Flashlight">🔦</button>
+            </div>
+            <div id="scanSummary" class="scan-summary">
+                <div class="scan-summary-label">
+                    Scanned Orders <span id="scannedCount">0</span> / <span id="totalCount">0</span>
+                </div>
+                <div id="scannerStatus" class="scan-summary-status">Scanning...</div>
             </div>
         </div>
-        <div id="scannerContainer" class="scanner-container"></div>
-        <div id="scannedCodeDisplay" class="scanned-code-display"></div>
-        <div class="scanner-instruction">Point camera at barcode</div>
+
+        <div class="scanner-banner">
+            <span class="scanner-banner-icon">║║║</span>
+            <span class="scanner-banner-text">Please Scan Waybill</span>
+            <span class="scanner-banner-icon">║║║</span>
+        </div>
+
+        <div class="scanner-frame">
+            <div id="scannerContainer" class="scanner-container"></div>
+            <div class="scanner-frame-border"></div>
+            <div id="scannedCodeDisplay" class="scanned-code-display"></div>
+        </div>
+
+        <div class="scanner-bottom">
+            <div class="scanner-bottom-text">
+                Use Keyboard / HDD to enter Waybill Number
+            </div>
+            <div class="scanner-bottom-actions">
+                <button class="bottom-btn">Enter Waybill no</button>
+                <button class="bottom-btn">HDD Input</button>
+            </div>
+        </div>
     </div>
 
-Kailash
     <!-- Display List (Hidden) -->
     <div class="content-area" style="display: none;">
         <table class="tracking-table">
