@@ -5,6 +5,8 @@
 const CONFIG = {
     // Replace with your Google Apps Script Web App URL
     GOOGLE_SHEET_URL: 'https://script.google.com/macros/s/AKfycbxVkr_Icr8YVjJZETk5_BfuoSPW0vZ2eXWzQSBtFo4NTACk4LFeuaS93BOnOQRb3g/exec',
+    // Total orders to be scanned (used for UI summary bar)
+    TOTAL_ORDERS: 64,
     BEEP_SOUND_URL: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIGWi77+efTRAMUKfj8LZjHAY4kdfyzHksBSR3x/DdkEAKFF606euoVRQKRp/g8r5sIQUrgc7y2Yk2CBlou+/nn00QDFCn4/C2YxwGOJHX8sx5LAUkd8fw3ZBAC'
 };
 
@@ -39,6 +41,8 @@ function initializeApp() {
     setupCameraButton();
     setupCloseScanner();
     setupTorchButton();
+    // Initialize scan summary counts
+    updateScanSummary('idle');
     
     // Focus on input for better mobile UX
     const input = document.getElementById('manualInput');
@@ -334,6 +338,31 @@ function updateScannerStatus(text) {
 }
 
 /**
+ * Update the "Scanned Orders X / Y" summary bar
+ * Uses unique scanned codes for the X value so duplicates do not inflate count.
+ * @param {'idle'|'success'|'error'} statusType
+ */
+function updateScanSummary(statusType = 'idle') {
+    const scannedCountEl = document.getElementById('scannedCount');
+    const totalCountEl = document.getElementById('totalCount');
+    const summaryEl = document.getElementById('scanSummary');
+
+    if (!scannedCountEl || !totalCountEl || !summaryEl) return;
+
+    const uniqueCount = state.scannedCodes.size;
+    scannedCountEl.textContent = String(uniqueCount);
+    totalCountEl.textContent = String(CONFIG.TOTAL_ORDERS ?? 0);
+
+    summaryEl.classList.remove('success', 'error');
+
+    if (statusType === 'success') {
+        summaryEl.classList.add('success');
+    } else if (statusType === 'error') {
+        summaryEl.classList.add('error');
+    }
+}
+
+/**
  * Start FPS optimization loop - tracks activity for potential future optimization
  * 
  * NOTE: html5-qrcode library doesn't support changing FPS dynamically after initialization.
@@ -500,6 +529,7 @@ async function processTrackingCode(trackingCode, entryType, playBeepSound = fals
         showVisualFeedback('duplicate');
         vibrateDuplicate();
         playErrorSound();
+        updateScanSummary('error');
         return false;
     }
     
@@ -516,6 +546,7 @@ async function processTrackingCode(trackingCode, entryType, playBeepSound = fals
         addToList(trackingCode, entryType, true); // true = isDuplicate
         vibrateDuplicate();
         playErrorSound();
+        updateScanSummary('error');
         return false;
     }
     
@@ -565,6 +596,9 @@ async function processTrackingCode(trackingCode, entryType, playBeepSound = fals
         console.error('Error sending to Google Sheet:', error);
         showMessage('Failed to save to sheet', 'error');
     }
+
+    // Update summary bar for successful unique scan
+    updateScanSummary('success');
     
     return true;
 }
